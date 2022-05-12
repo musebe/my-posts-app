@@ -1,26 +1,33 @@
+import { useState, useEffect } from 'react';
+
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.scss';
 
 import { useAuth } from '../hooks/useAuth';
+import { getAllPosts, createPost } from '../lib/posts';
 
 import Bio from '../components/Bio';
 import Post from '../components/Post';
 import PostForm from '../components/PostForm';
 
-export default function Home() {
+export default function Home({ posts: defaultPosts }) {
+  const [posts, updatePosts] = useState(defaultPosts);
 
+  const postsSorted = posts.sort(function (a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
 
-    const { user, logIn, logOut } = useAuth();
+  const { user, logIn, logOut } = useAuth();
 
-    async function handleOnSubmit(data, e) {
-      e.preventDefault();
+  async function handleOnSubmit(data, e) {
+    e.preventDefault();
 
-      await createPost(data);
+    await createPost(data);
 
-      const posts = await getAllPosts();
-      updatePosts(posts);
-    }
+    const posts = await getAllPosts();
+    updatePosts(posts);
+  }
 
   return (
     <div className={styles.container}>
@@ -48,29 +55,35 @@ export default function Home() {
           tagline='Community Builder!'
           role='Developer Advocate @ Cloudinary'
         />
-        {/* <h1 className={styles.title}>My Posts</h1> */}{' '}
+
         <ul className={styles.posts}>
-          <li>
-            <Post content='Hello, world!' date='2020-01-01' />
-          </li>
-
-          <li>
-            <Post
-              content='I’m working in Figma trying to design a new website that shows all
-              of my tweets!'
-            />
-          </li>
-
-          <li>
-            <Post
-              content='I’m working in Figma trying to design a new website that shows all
-              of my tweets!'
-              date='5/09/2022'
-            />
-          </li>
+          {postsSorted.map((post) => {
+            const { content, id, date } = post;
+            return (
+              <li key={id}>
+                <Post
+                  content={content}
+                  date={new Intl.DateTimeFormat('en-US', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  }).format(new Date(date))}
+                />
+              </li>
+            );
+          })}
         </ul>
         {user && <PostForm onSubmit={handleOnSubmit} />}
       </main>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  const posts = await getAllPosts();
+
+  return {
+    props: {
+      posts,
+    },
+  };
 }
