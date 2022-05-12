@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Head from 'next/head';
 import Image from 'next/image';
@@ -22,7 +22,7 @@ export default function Home({ posts: defaultPosts }) {
 
   async function handleOnSubmit(data, e) {
     e.preventDefault();
-
+    console.log('data', data);
     await createPost(data);
 
     const posts = await getAllPosts();
