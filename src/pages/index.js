@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.scss';
 
+import Bio from '../components/Bio';
 import Post from '../components/Post';
 import PostForm from '../components/PostForm';
 
@@ -15,7 +16,13 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>My Posts</h1>
+        <Bio
+          headshot='https://res.cloudinary.com/hackit-africa/image/upload/c_thumb,w_200,g_face/v1580219806/me.jpg'
+          name='Eugene Musebe'
+          tagline='Community Builder!'
+          role='Developer Advocate @ Cloudinary'
+        />
+        {/* <h1 className={styles.title}>My Posts</h1> */}
 
         <ul className={styles.posts}>
           <li>
@@ -39,8 +46,6 @@ export default function Home() {
         </ul>
 
         <PostForm />
-
-      
       </main>
     </div>
   );
