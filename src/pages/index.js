@@ -2,11 +2,26 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.scss';
 
+import { useAuth } from '../hooks/useAuth';
+
 import Bio from '../components/Bio';
 import Post from '../components/Post';
 import PostForm from '../components/PostForm';
 
 export default function Home() {
+
+
+    const { user, logIn, logOut } = useAuth();
+
+    async function handleOnSubmit(data, e) {
+      e.preventDefault();
+
+      await createPost(data);
+
+      const posts = await getAllPosts();
+      updatePosts(posts);
+    }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -15,6 +30,17 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
+      {!user && (
+        <p>
+          <button onClick={logIn}>Log In</button>
+        </p>
+      )}
+
+      {user && (
+        <p>
+          <button onClick={logOut}>Log Out</button>
+        </p>
+      )}
       <main className={styles.main}>
         <Bio
           headshot='https://res.cloudinary.com/hackit-africa/image/upload/c_thumb,w_200,g_face/v1580219806/me.jpg'
@@ -23,7 +49,6 @@ export default function Home() {
           role='Developer Advocate @ Cloudinary'
         />
         {/* <h1 className={styles.title}>My Posts</h1> */}{' '}
-      
         <ul className={styles.posts}>
           <li>
             <Post content='Hello, world!' date='2020-01-01' />
@@ -44,7 +69,7 @@ export default function Home() {
             />
           </li>
         </ul>
-        <PostForm />
+        {user && <PostForm onSubmit={handleOnSubmit} />}
       </main>
     </div>
   );
