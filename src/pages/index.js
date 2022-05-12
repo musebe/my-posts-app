@@ -22,8 +22,8 @@ export default function Home() {
           tagline='Community Builder!'
           role='Developer Advocate @ Cloudinary'
         />
-        {/* <h1 className={styles.title}>My Posts</h1> */}
-
+        {/* <h1 className={styles.title}>My Posts</h1> */}{' '}
+      
         <ul className={styles.posts}>
           <li>
             <Post content='Hello, world!' date='2020-01-01' />
@@ -44,7 +44,6 @@ export default function Home() {
             />
           </li>
         </ul>
-
         <PostForm />
       </main>
     </div>
